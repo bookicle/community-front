@@ -15,6 +15,8 @@ const app = createApp(App)
 app.use(router)
 app.use(ElementPlus);
 app.config.globalProperties.VueCookies = VueCookies;
-
+app.config.globalProperties.globalInfo={
+    bodyWidth:1300,
+}
 
 app.mount('#app')

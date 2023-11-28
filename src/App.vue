@@ -1,5 +1,5 @@
 <template >
-  <el-button type="primary">按钮</el-button>
+  <RouterView />
 </template>
 
 <script setup>
