@@ -1,7 +1,7 @@
 <script setup>
 import {getCurrentInstance, onMounted, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import Dialog from "@/components/Dialog.vue";
+import LoginAndRegister from "@/views/LoginAndRegister.vue";
 
 const { proxy } = getCurrentInstance()
 const router = useRouter();
@@ -56,6 +56,12 @@ const initScroll = () => {
   })
 }
 
+// 登录注册
+const loginRegisterRef = ref();
+const loginAndRegister = (type) => {
+  loginRegisterRef.value.showPanel(type);
+};
+
 onMounted(()=>{
   initScroll();
 })
@@ -80,19 +86,20 @@ onMounted(()=>{
             搜索 <span class="iconfont icon-search"> </span></el-button>
         </div>
 
-        <el-button-group :style="{ 'margin-left': '20px' }">
-          <el-button type="primary" plain>
+        <el-button-group :style="{ 'margin-left': '10px' }">
+          <el-button type="primary" plain @click="loginAndRegister(1)">
             登录 <span class="iconfont icon-login"></span></el-button>
-          <el-button type="primary" plain>
+          <el-button type="primary" plain @click="loginAndRegister(0)">
             注册 <span class="iconfont icon-register"></span></el-button>
         </el-button-group>
-
       </div>
     </div>
 
     <div>
       <router-view />
     </div>
+<!--    登录注册-->
+    <LoginAndRegister ref="loginRegisterRef"></LoginAndRegister>
   </div>
 </template>
 

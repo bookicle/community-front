@@ -30,9 +30,10 @@ const props = defineProps({
 })
 
 const emit = defineEmits();
+
 const close = () => {
   // noinspection JSValidateTypes
-  emit('close');
+  emit("close");
 }
 </script>
 
@@ -41,12 +42,13 @@ const close = () => {
     <el-dialog
         :close-on-click-modal="false"
         :draggable="true"
-        :show-close=showClose
-        :title=title
-        :top=top
-        :width=width
+        :show-close="showClose"
+        :title="title"
+        :top="top"
+        :width="width"
         class="cust-dialog"
-        :model-value=show
+        :model-value="show"
+        @close="close"
     >
       <div class="dialog-body">
         <slot></slot>
@@ -76,6 +78,7 @@ const close = () => {
     padding: 15px;
     min-height: 100px;
     max-height: calc(100vh - 200px);
+    overflow: auto;
   }
   .dialog-footer{
     text-align: right;
