@@ -1,6 +1,7 @@
 <script setup>
 import {getCurrentInstance, onMounted, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
+import Dialog from "@/components/Dialog.vue";
 
 const { proxy } = getCurrentInstance()
 const router = useRouter();
@@ -88,6 +89,10 @@ onMounted(()=>{
 
       </div>
     </div>
+
+    <div>
+      <router-view />
+    </div>
   </div>
 </template>
 
@@ -129,7 +134,7 @@ onMounted(()=>{
           margin-left: 5px;
         }
 
-        .el-buttun+.el-button {
+        .el-button+.el-button {
           margin-left: 5px;
         }
       }
