@@ -1,6 +1,6 @@
 <script setup>
-import {getCurrentInstance, onMounted, ref} from "vue";
-import {useRoute, useRouter} from "vue-router";
+import { getCurrentInstance, onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import LoginAndRegister from "@/views/LoginAndRegister.vue";
 
 const { proxy } = getCurrentInstance()
@@ -32,22 +32,22 @@ const logoInfo = [
 
 const showHeader = ref(true);
 // 获取滚动条的高度
-const getScrollTop = () =>{
+const getScrollTop = () => {
   return document.documentElement.scrollTop ||
-      window.pageXOffset ||
-      document.body.scrollTop;
+    window.pageXOffset ||
+    document.body.scrollTop;
 };
 
 const initScroll = () => {
   let initScroll = getScrollTop();
   let scrollType = 0;
 
-  window.addEventListener("scroll",()=>{
+  window.addEventListener("scroll", () => {
     let currentScrollTop = getScrollTop();
-    if(currentScrollTop > initScroll){
+    if (currentScrollTop > initScroll) {
       // 往下滚动
       scrollType = 1;
-    }else{
+    } else {
       // 往上滚动
       scrollType = 0;
     }
@@ -62,15 +62,14 @@ const loginAndRegister = (type) => {
   loginRegisterRef.value.showPanel(type);
 };
 
-onMounted(()=>{
+onMounted(() => {
   initScroll();
 })
 </script>
 
 <template>
   <div class="header">
-    <div :style="{ width: proxy.globalInfo.bodyWidth + 'px' }"
-         class="header-content">
+    <div :style="{ width: proxy.globalInfo.bodyWidth + 'px' }" class="header-content">
       <!--    logo-->
       <router-link to="/" class="logo ">
         <span v-for="item in logoInfo" :style="{ color: item.color }">{{ item.letter }}</span>
@@ -98,7 +97,7 @@ onMounted(()=>{
     <div>
       <router-view />
     </div>
-<!--    登录注册-->
+    <!--    登录注册-->
     <LoginAndRegister ref="loginRegisterRef"></LoginAndRegister>
   </div>
 </template>
@@ -148,4 +147,5 @@ onMounted(()=>{
 
     }
   }
-}</style>
+}
+</style>
