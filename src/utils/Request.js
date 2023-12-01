@@ -7,13 +7,13 @@ const contentTypeJson = "application/json;charset=UTF-8"
 
 const instance = axios.create({
     baseURL: "/api",
-    timeout: 10*1000,
+    timeout: 10 * 1000,
 });
 
 // 请求前过滤器
 let loading = null;
 instance.interceptors.request.use((config) => {
-    if(config.showLoading){
+    if (config.showLoading) {
         loading = ElLoading.service({
             lock: true,
             text: 'Loading',
@@ -21,62 +21,62 @@ instance.interceptors.request.use((config) => {
         });
     }
     return config;
-    }, (error)=>{
-        if(error.config.showLoading && loading){
-            loading.close();
-        }
-        Message.error("请求发送失败");
-        return Promise.reject("请求发送失败");
-    });
+}, (error) => {
+    if (error.config.showLoading && loading) {
+        loading.close();
+    }
+    Message.error("请求发送失败");
+    return Promise.reject("请求发送失败");
+});
 
 // 请求后过滤器
 instance.interceptors.response.use(
-    (response)=>{
-        const {showLoading,errorCallback, showError} = response.config;
-        if(showLoading && loading){
+    (response) => {
+        const { showLoading, errorCallback, showError } = response.config;
+        if (showLoading && loading) {
             loading.close();
         }
         const responseData = response.data;
-        if(responseData.code === 200){
+        if (responseData.code === 200) {
             return responseData.data;
-        }else if(responseData.code === 901) {
-            return Promise.reject({showError:false,msg:"登录超时"})
+        } else if (responseData.code === 901) {
+            return Promise.reject({ showError: false, msg: "登录超时" })
         } else {
-            if(errorCallback){
+            if (errorCallback) {
                 errorCallback(responseData);
             }
-            return Promise.reject({showError:showError,msg: responseData.info});
+            return Promise.reject({ showError: showError, msg: responseData.info });
         }
 
-    }, (error)=>{
-        if(error.config.showLoading && loading) {
+    }, (error) => {
+        if (error.config.showLoading && loading) {
             loading.close();
         }
-        return Promise.reject({showError:true,msg: "网络异常"});
+        return Promise.reject({ showError: true, msg: "网络异常" });
     }
 );
 
-const request = (config)=>{
-    const {url,params,dataType,showLoading=true,errorCallback,showError = true} = config;
+const request = (config) => {
+    const { url, params, dataType, showLoading = true, errorCallback, showError = true } = config;
     let contentType = contentTypeForm;
     let formData = new FormData();
-    for(let key in params){
-        formData.append(key,params[key] === undefined ? "" : params[key]);
+    for (let key in params) {
+        formData.append(key, params[key] === undefined ? "" : params[key]);
     }
-    if(dataType === "json"&& dataType!=null) {
+    if (dataType === "json" && dataType != null) {
         contentType = contentTypeJson;
     }
     let headers = {
         "Content-Type": contentType,
         "X-Requested-With": "XMLHttpRequest",
     };
-    return instance.post(url,formData,{
-        headers:headers,
-        showLoading:showLoading,
-        errorCalallback:errorCallback,
-        showError:showError
+    return instance.post(url, formData, {
+        headers: headers,
+        showLoading: showLoading,
+        errorCalallback: errorCallback,
+        showError: showError
     }).catch(error => {
-        if(error.showError) {
+        if (error.showError) {
             Message.error(error.msg);
         }
         return null;

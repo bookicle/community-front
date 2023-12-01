@@ -229,7 +229,7 @@ const sendEmailCode = () => {
     let result = await proxy.Request({
       url: api.sendMailCode,
       params: params,
-      errorCallback:()=>{
+      errorCallback: () => {
         changeCheckCode(1);
       }
     });

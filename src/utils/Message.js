@@ -1,5 +1,5 @@
-import { ElMessage} from "element-plus";
-import  de  from 'element-plus/es/locale/lang/de';
+import { ElMessage } from "element-plus";
+import de from 'element-plus/es/locale/lang/de';
 
 const showMessage = (msg, callback, type) => {
     ElMessage({
@@ -13,16 +13,16 @@ const showMessage = (msg, callback, type) => {
 }
 
 const message = {
-    error:(msg, callback)=>{
+    error: (msg, callback) => {
         showMessage(msg, callback, 'error');
     },
-    success:(msg, callback)=>{
+    success: (msg, callback) => {
         showMessage(msg, callback, 'success');
     },
-    warning:(msg, callback)=>{
+    warning: (msg, callback) => {
         showMessage(msg, callback, 'warning');
     },
-    info:(msg, callback)=>{
+    info: (msg, callback) => {
         showMessage(msg, callback, 'info');
     }
 }
