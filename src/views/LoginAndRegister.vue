@@ -100,7 +100,7 @@
         </div>
       </el-form-item>
       <el-form-item v-if="opType === 1">
-        <div class="rememberme-panel" :style="{'text-align': 'left'}">
+        <div class="rememberme-panel" :style="{ 'text-align': 'left' }">
           <el-checkbox v-model="formData.rememberMe">记住密码</el-checkbox>
         </div>
         <div class="no-account">
@@ -116,35 +116,27 @@
       </el-form-item>
     </el-form>
   </Dialog>
-  <Dialog
-  :show="dialogConfigForSendMailCode.show"
-  :title="dialogConfigForSendMailCode.title"
-  :buttons="dialogConfigForSendMailCode.buttons"
-  width="400px"
-  :showCancel="false"
-  @close="dialogConfigForSendMailCode.show = false"
-  >
-   <el-form
-   :model="formDataForSendMailCode"
-   :rules="rules"
-   ref="formDateForSendMailCodeRef"
-   >
-   <!-- input输入 -->
-    <el-form-item label="email" >
-      {{formData.email}}
-   </el-form-item>
-     <el-form-item prop="checkCode" label="验证码">
-       <div class="check-code-panel">
-         <el-input size="large" v-model="formData.checkCode" placeholder="请输入验证码">
-           <template #prefix>
+  <Dialog :show="dialogConfigForSendMailCode.show" :title="dialogConfigForSendMailCode.title"
+    :buttons="dialogConfigForSendMailCode.buttons" width="500px" :showCancel="false"
+    @close="dialogConfigForSendMailCode.show = false">
+    <el-form :model="formDataForSendMailCode" :rules="rules" ref="formDateForSendMailCodeRef">
+      <!-- input输入 -->
+      <el-form-item label="email">
+        {{ formData.email }}
+      </el-form-item>
+      <el-form-item prop="checkCode" label="验证码">
+        <div class="check-code-panel">
+          <el-input size="large" v-model="formDataForSendMailCode.checkCode" placeholder="请输入验证码">
+            <template #prefix>
               <span class="iconfont icon-checkcode">
               </span>
-           </template>
-         </el-input>
-         <img :src="checkCodeForSendMailUrl" class="check-code" @click="changeCheckCode(1)" alt="验证码" />
-
-       </div>
-     </el-form-item>
+            </template>
+          </el-input>
+          <div class="check-code">
+            <img :src="checkCodeForSendMailUrl" @click="changeCheckCode(1)" alt="验证码" />
+          </div>
+        </div>
+      </el-form-item>
 
     </el-form>
   </Dialog>
@@ -160,6 +152,7 @@ const route = useRoute();
 
 const api = {
   checkCode: '/api/checkCode',
+  sendMailCode: '/sendMailCode',
 };
 
 
@@ -174,9 +167,9 @@ defineExpose({ showPanel });
 const checkCodeUrl = ref(api.checkCode);
 const checkCodeForSendMailUrl = ref(api.checkCode);
 const changeCheckCode = (type) => {
-  if(type === 0)
+  if (type === 0)
     checkCodeUrl.value = api.checkCode + '?type=' + type + '&time=' + new Date().getTime();
-  else{
+  else {
     checkCodeForSendMailUrl.value = api.checkCode + '?type=' + type + '&time=' + new Date().getTime();
   }
 };
@@ -210,15 +203,15 @@ const dialogConfigForSendMailCode = reactive({
 });
 
 const showSendEmailDialog = () => {
-  formDateForSendMailCodeRef.value.validateField("email", (valid)=>{
-    if(!valid) {
+  formDateRef.value.validateField("email", (valid) => {
+    if (!valid) {
       return;
     }
     dialogConfigForSendMailCode.show = true;
     nextTick(() => {
       changeCheckCode(1);
       formDateForSendMailCodeRef.value.resetFields();
-      formDateForSendMailCode.value = {
+      formDataForSendMailCode.value = {
         email: formData.value.email,
       }
     })
@@ -227,12 +220,25 @@ const showSendEmailDialog = () => {
 
 // 发送邮件
 const sendEmailCode = () => {
-  formDateForSendMailCodeRef.value.validate((valid) => {
+  formDateForSendMailCodeRef.value.validate(async (valid) => {
     if (!valid) {
-      return ;
+      return;
     }
-        console.log("aaa")
-    })
+    const params = Object.assign({}, formDataForSendMailCode.value);
+    params.type = 0;
+    let result = await proxy.Request({
+      url: api.sendMailCode,
+      params: params,
+      errorCallback:()=>{
+        changeCheckCode(1);
+      }
+    });
+    if (!result) {
+      return;
+    }
+    proxy.Message.success('验证码发送成功，请登陆邮箱查看');
+    dialogConfigForSendMailCode.show = false;
+  });
 }
 
 const dialogConfig = reactive({
@@ -272,7 +278,7 @@ const rules = ref({
     { validator: checkRePassword, message: '两次输入的密码不一致', trigger: 'blur' }
   ],
   checkCode: [
-    { required: true, message: '请输入验证码', trigger: 'blur' },
+    { required: true, message: '请输入图片验证码' },
   ]
 });
 
@@ -309,6 +315,7 @@ const resetForm = () => {
 
   .check-code-panel {
     display: flex;
+
     .check-code {
       margin-left: 5px;
       cursor: pointer;
