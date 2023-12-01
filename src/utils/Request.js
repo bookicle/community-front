@@ -61,7 +61,7 @@ const request = (config)=>{
     let contentType = contentTypeForm;
     let formData = new FormData();
     for(let key in params){
-        formData.append(key,params[key] == undefined ? "" : params[key]);
+        formData.append(key,params[key] === undefined ? "" : params[key]);
     }
     if(dataType === "json"&& dataType!=null) {
         contentType = contentTypeJson;
